@@ -1,0 +1,17 @@
+[package]
+name = "herdr-pad"
+version = "0.1.0"
+edition = "2024"
+description = "Drive the Herdr desktop app with an Xbox controller"
+license = "MIT"
+repository = "https://github.com/jaketothepast/herdr-pad"
+
+[dependencies]
+anyhow = "1.0.104"
+objc2 = "0.6.5"
+objc2-core-foundation = { version = "0.3.2", features = ["CFRunLoop", "CFString", "CFDate"] }
+objc2-foundation = "0.3.2"
+objc2-game-controller = { version = "0.3.2", features = ["GCController", "GCExtendedGamepad", "GCPhysicalInputProfile", "GCControllerElement", "GCControllerButtonInput", "GCControllerDirectionPad", "GCControllerAxisInput", "GCDevice"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+toml = "1.1.8"

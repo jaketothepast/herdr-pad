@@ -1,0 +1,1 @@
+{ "place": "none", "title": "Controller", "overlay": { "kind": "window", "key": "controller-panel", "frame": "none", "at": { "x": 12, "y": 60 } } }

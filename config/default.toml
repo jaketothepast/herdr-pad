@@ -1,0 +1,125 @@
+# herdr-pad: drive Herdr with an Xbox controller.
+#
+# This file is yours: edit it and the change applies within a second.
+# Delete it to get the defaults back.
+#
+# Buttons: a b x y lb rb lt rt view menu l3 r3 share guide
+#          dpad_up dpad_down dpad_left dpad_right
+#          ls_up ls_down ls_left ls_right   (left stick flicks)
+#          rs_up rs_down rs_left rs_right   (right stick flicks)
+#
+# Actions:
+#   "keys:<key> [key...]"        press keys in the focused terminal (enter, esc, up, ctrl+c, 1, y ...)
+#   "cmd:<command> [arg=value]"  run a Herdr command (`herdr-app commands` lists them all);
+#                                values are JSON when they parse as JSON, else text
+#   "back"           B: close the controller menu or a dialog; else Esc
+#                    (hold it when the agent is working: a tap won't interrupt it)
+#   "urgent"         go to the agent that needs you most (blocked, then done); again: the next one
+#   "previous_pane"  go back to where you were before the last jump
+#   "menu"           the controller's action menu
+#   "legend"         show what every button does (tap: stays open; hold: while held)
+#   "layer:<name>"   while held, the buttons in [layers.<name>] take over
+#   "dictation"      runs [dictation] press / release (push to talk)
+#   "new_space"      pick a folder and make a space there (see [new_space])
+#   "erase"          Backspace; held, it repeats and then deletes word by word
+#   "clear_input"    hold to empty the focused input (Claude Code's box or a shell line)
+#   "none"
+# A button can also take a label for the legend: a = { action = "keys:enter", label = "Enter" }
+
+# Ignore the controller while another app is in front (so games don't drive Herdr).
+only_when_focused = true
+
+[buttons]
+a = { action = "keys:enter", label = "Enter" }
+b = { action = "back", label = "Back / Esc · hold: stop a working agent" }
+x = { action = "urgent", label = "Go to the agent that needs you" }
+y = { action = "cmd:pane.zoom", label = "Zoom pane" }
+lb = { action = "cmd:tab.prev", label = "Previous tab" }
+rb = { action = "cmd:tab.next", label = "Next tab" }
+lt = { action = "layer:spaces", label = "Hold + LB / RB: switch space" }
+rt = { action = "dictation", label = "Hold to dictate" }
+dpad_up = { action = "keys:up", label = "Up" }
+dpad_down = { action = "keys:down", label = "Down" }
+dpad_left = { action = "keys:left", label = "Left" }
+dpad_right = { action = "keys:right", label = "Right" }
+ls_up = { action = "cmd:pane.go direction=up", label = "Pane above" }
+ls_down = { action = "cmd:pane.go direction=down", label = "Pane below" }
+ls_left = { action = "cmd:pane.go direction=left", label = "Pane left" }
+ls_right = { action = "cmd:pane.go direction=right", label = "Pane right" }
+r3 = { action = "previous_pane", label = "Back to previous pane" }
+rs_left = { action = "erase", label = "Erase (hold: faster, then by word)" }
+rs_down = { action = "clear_input", label = "Hold: clear input" }
+menu = { action = "menu", label = "Action menu" }
+view = { action = "legend", label = "Button guide" }
+
+# Held LT turns the bumpers into space switching: tabs, one level up.
+[layers.spaces]
+lb = { action = "cmd:space.prev", label = "Previous space" }
+rb = { action = "cmd:space.next", label = "Next space" }
+
+# Push to talk (RT by default). hold_key is held down for as long as the button is:
+# "fn" is Wispr Flow's default push-to-talk; "f13".."f20" work for apps you set to those.
+# Holding a key needs Accessibility permission for herdr-pad.
+# press / release: also (or instead) run a program and its arguments.
+[dictation]
+hold_key = "fn"
+press = []
+release = []
+
+# New space… lists recent spaces' folders, then the folders inside these, newest first.
+# A makes the space and starts `agent` in it; Y makes it with a plain shell.
+[new_space]
+roots = ["~/Projects"]
+agent = ["claude"]
+
+[timing]
+repeat = ["dpad_up", "dpad_down", "dpad_left", "dpad_right"]
+repeat_delay_ms = 380
+repeat_interval_ms = 90
+repeat_fast_after_ms = 1500
+repeat_fast_interval_ms = 50
+interrupt_hold_ms = 500   # hold B this long to interrupt a working agent
+confirm_hold_ms = 800     # hold A this long on a menu item marked confirm
+legend_hold_ms = 300      # View held longer than this closes the guide on release
+a_guard_ms = 250          # A is ignored this long after the controller moves focus
+esc_gap_ms = 400          # never two Esc presses closer than this
+
+# The action menu (Menu button): D-pad to move, A to pick, B to close.
+# confirm = true: hold A to run it (for things you can't undo).
+[[menu]]
+label = "New Claude tab"
+action = 'cmd:tab.new argv=["claude"]'
+
+[[menu]]
+label = "New shell tab"
+action = "cmd:tab.new"
+
+[[menu]]
+label = "New space…"
+action = "new_space"
+
+[[menu]]
+label = "Split right"
+action = "cmd:pane.split direction=right"
+
+[[menu]]
+label = "Split down"
+action = "cmd:pane.split direction=down"
+
+[[menu]]
+label = "Next agent"
+action = "cmd:agent.next"
+
+[[menu]]
+label = "Previous agent"
+action = "cmd:agent.prev"
+
+[[menu]]
+label = "Send Ctrl+C"
+action = "keys:ctrl+c"
+confirm = true
+
+[[menu]]
+label = "Close pane"
+action = "cmd:pane.close"
+confirm = true
