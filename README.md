@@ -6,6 +6,8 @@ answer their prompts, move between panes, tabs and spaces, all from the couch.
 A small floating panel in Herdr shows what each press did, where X will take you next, the
 action menu and a button guide. There's no rumble on macOS, so the panel is your feedback.
 
+<p align="center"><img src="docs/buttons.png" width="440" alt="The button guide panel in Herdr: what each controller button does"></p>
+
 ## Install
 
 ```sh
